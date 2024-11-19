@@ -1,16 +1,11 @@
 use std::{collections::HashMap, env, sync::{Arc, Mutex}, time::Duration};
-use database::start_db;
 use poise::serenity_prelude as serenity;
 use dotenvy::dotenv;
 use warp::Filter;
 
-mod graphql_queries;
-mod anime_guessing_game;
 mod types;
 mod helpers;
-mod group_scores;
 mod database;
-mod anime_guessing_helpers; 
 mod commands;
 mod team_swapping;
 mod api_routes;
@@ -66,10 +61,6 @@ async fn main() {
     let options = poise::FrameworkOptions {
         commands: vec![
                     commands::help::help(), 
-                    commands::anime_guessing::animeguess::animeguess(),
-                    commands::anime_guessing::hint::hint(),
-                    commands::anime_guessing::guess::guess(),
-                    commands::anime_guessing::giveup::giveup(), 
                     commands::teamswap::create_team::create_team(),
                     commands::teamswap::submit_anime::submit_anime(),
                     commands::teamswap::remove_submission::remove_submission(),
