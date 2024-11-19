@@ -1,7 +1,6 @@
 use rusqlite::{Connection, OptionalExtension, Result};
 use crate::types;
-use strsim::jaro_winkler;
-use std::{collections::HashMap, hash::{DefaultHasher, Hash, Hasher}};
+use std::collections::HashMap;
 use poise::serenity_prelude as serenity;
 use std::time::SystemTime;
 use chrono::{DateTime, Utc};
@@ -200,7 +199,7 @@ pub fn count_submitted_anime(user_id: u64) -> Result<u64> {
 }
 
 pub fn get_submitted_anime(user_id: u64) -> Result<Vec<String>> {
-    let ANIME_NAME_QUERY: &str = "
+    const ANIME_NAME_QUERY: &str = "
     SELECT name FROM anime WHERE submitter = ?1;
     ";
     let mut names: Vec<String> = Vec::new();
@@ -222,7 +221,7 @@ pub fn get_submitted_anime(user_id: u64) -> Result<Vec<String>> {
 }
 
 pub fn get_all_anime() -> Result<Vec<types::SubmittedAnime>> {
-    let GET_ANIME_QUERY: &str = "
+    const GET_ANIME_QUERY: &str = "
     SELECT 
         a.anime_id,
         a.name AS anime_name,
@@ -261,7 +260,7 @@ pub fn get_all_anime() -> Result<Vec<types::SubmittedAnime>> {
 }
 
 pub fn get_anime_submitter(anime_name: &String) -> Result<u64> {
-    let SUBMITTER_QUERY: &str = "
+    const SUBMITTER_QUERY: &str = "
     SELECT submitter FROM anime WHERE name = ?1;
     ";
     let conn: Connection = Connection::open(TEAM_SWAPPING_PATH)?;
@@ -270,7 +269,7 @@ pub fn get_anime_submitter(anime_name: &String) -> Result<u64> {
 }
 
 pub fn get_member_with_team(user_id :u64) -> Result<(types::Member, u64)> {
-    let MEMBER_QUERY: &str = "
+    const MEMBER_QUERY: &str = "
     SELECT * FROM members WHERE member_id = ?1;
     ";
     let conn: Connection = Connection::open(TEAM_SWAPPING_PATH)?;
@@ -287,7 +286,7 @@ pub fn get_member_with_team(user_id :u64) -> Result<(types::Member, u64)> {
 }
 
 pub fn get_anime_id_by_name(anime_name: &String) -> Result<Option<(u64, u64)>> {
-    let ID_QUERY: &str = "
+    const ID_QUERY: &str = "
     SELECT anime_id, submitter FROM anime WHERE name = ?1;
     ";
     let conn: Connection = Connection::open(TEAM_SWAPPING_PATH)?;
@@ -305,7 +304,7 @@ pub fn get_anime_id_by_name(anime_name: &String) -> Result<Option<(u64, u64)>> {
 }
 
 pub fn get_unclaimed_anime_names() -> Result<Vec<String>> {
-    let UNCLAIMED_QUERY: &str = "
+    const UNCLAIMED_QUERY: &str = "
     SELECT a.name
     FROM anime a
     LEFT JOIN claimed_anime ca ON a.anime_id = ca.anime_id
@@ -320,7 +319,7 @@ pub fn get_unclaimed_anime_names() -> Result<Vec<String>> {
 }
 
 pub fn get_claimed_anime_by_user(user_id: u64) -> Result<Vec<String>> {
-    let NAMES_QUERY: &str = "
+    const NAMES_QUERY: &str = "
     SELECT anime.name
     FROM claimed_anime
     JOIN anime ON claimed_anime.anime_id = anime.anime_id
@@ -340,7 +339,7 @@ pub fn get_claimed_anime_by_user(user_id: u64) -> Result<Vec<String>> {
 }
 
 pub fn get_teammembers_id_by_team_id(team_id: u64) -> Result<Vec<u64>> {
-    let TEAM_QUERY: &str = "
+    const TEAM_QUERY: &str = "
     SELECT member_id
     FROM members
     WHERE team = ?1;
@@ -447,7 +446,7 @@ pub fn count_submissions_by_user() -> Result<Vec<(u64, String, u64)>> {
 }
 
 pub fn delete_anime(anime_name: &String) -> Result<usize> {
-    let DELETE_QUERY: &str = "
+    const DELETE_QUERY: &str = "
     DELETE FROM anime WHERE name = ?1;
     ";
     let conn: Connection = Connection::open(TEAM_SWAPPING_PATH)?;
@@ -456,7 +455,7 @@ pub fn delete_anime(anime_name: &String) -> Result<usize> {
 }
 
 pub fn delete_claim(anime_id: u64) -> Result<usize> {
-    let DELETE_QUERY: &str = "
+    const DELETE_QUERY: &str = "
     DELETE FROM claimed_anime WHERE anime_id = ?1;
     ";
     let conn: Connection = Connection::open(TEAM_SWAPPING_PATH)?;
@@ -478,7 +477,7 @@ pub fn delete_user(user_id: &u64) -> Result<usize> {
 }
 
 pub fn update_team_name(team_id: u64, new_name: String) -> Result<usize> {
-    let UPDATE_QUERY: &str = "
+    const UPDATE_QUERY: &str = "
     UPDATE teams
     SET team_name = ?1
     WHERE team_id = ?2;
@@ -489,7 +488,7 @@ pub fn update_team_name(team_id: u64, new_name: String) -> Result<usize> {
 }
 
 pub fn update_team_image(team_id: u64, new_image: String) -> Result<usize> {
-    let UPDATE_QUERY: &str = "
+    const UPDATE_QUERY: &str = "
     UPDATE teams
     SET team_image_url = ?1
     WHERE team_id = ?2;

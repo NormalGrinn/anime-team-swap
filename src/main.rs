@@ -4,7 +4,6 @@ use dotenvy::dotenv;
 use warp::Filter;
 
 mod types;
-mod helpers;
 mod database;
 mod commands;
 mod team_swapping;
